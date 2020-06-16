@@ -1,10 +1,8 @@
 #include <R.h>
 #include <math.h>
 
-void lasso0(double *y, double *X, double *b0, double *b, double *r,
-            double *xtx, int *n, int *p,
-            double *lambda, int *nlambda,
-            int *pen_fac, double *tol, int *cd_maxit)
+void lasso0(double *y, double *X, double *b0, double *b, double *r, double *xtx, int *n, int *p,
+            double *lambda, int *nlambda, int *pen_fac, double *tol, int *cd_maxit)
 {
     double b_curr[*p];
     double r_init[*n];

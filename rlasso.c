@@ -1,6 +1,6 @@
 #include <R.h>
 #include <Rinternals.h>
-#include "lasso0.h"
+#include "tlpreg.h"
 
 SEXP lasso(SEXP y, SEXP X, SEXP b0, SEXP b, SEXP r,
            SEXP xtx, SEXP n, SEXP p, SEXP lambda, SEXP nlambda,

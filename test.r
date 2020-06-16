@@ -4,8 +4,9 @@ library(ncvreg)
 
 # example: lasso 
 source("lasso.r")
-n <- 1000
-p <- 200000
+source("cv.lasso.r")
+n <- 500
+p <- 5000
 #S <- matrix(0.8,p,p) 
 #diag(S) <- rep(1,p)
 #X <- rmvnorm(n, S)
@@ -17,19 +18,21 @@ for(j in 1:p) {
 }
 
 t0 <- Sys.time()
-b1 <- glmnet(x=X, y=y, standardize=FALSE)
+m1 <- cv.glmnet(x=X, y=y, standardize=FALSE)
 t1 <- Sys.time()
 t1-t0
 t0 <- Sys.time()
-b2 <- ncvreg(X=X, y=y, penalty="lasso")
+m2 <- cv.ncvreg(X=X, y=y, penalty="lasso")
 t1 <- Sys.time()
 t1-t0
 t0 <- Sys.time()
-b3 <- lasso0(X=X, y=y)
+m3 <- cv.lasso(X=X, y=y, tol=1e-4, nfold=5)
 t1 <- Sys.time()
 t1-t0
 
-
+m1$lambda.min
+m2$lambda.min
+m3$lambda.min
 
 
 
