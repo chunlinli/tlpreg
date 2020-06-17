@@ -1,16 +1,16 @@
-#library(mvtnorm)
+library(mvtnorm)
 library(glmnet)
 library(ncvreg)
 
-# example: lasso 
+# example: test lasso 
 source("lasso.r")
 source("cv.lasso.r")
 n <- 500
 p <- 5000
-#S <- matrix(0.8,p,p) 
-#diag(S) <- rep(1,p)
-#X <- rmvnorm(n, S)
-X <- matrix(rnorm(n*p),n,p)
+S <- matrix(0.8,p,p) 
+diag(S) <- rep(1,p)
+X <- rmvnorm(n, sigma=S)
+#X <- matrix(rnorm(n*p),n,p)
 y <- X[,1] + X[,2] + rnorm(n)
 
 for(j in 1:p) {
@@ -26,7 +26,7 @@ m2 <- cv.ncvreg(X=X, y=y, penalty="lasso")
 t1 <- Sys.time()
 t1-t0
 t0 <- Sys.time()
-m3 <- cv.lasso(X=X, y=y, tol=1e-4, nfold=5)
+m3 <- cv.lasso(X=X, y=y, nfold =10)
 t1 <- Sys.time()
 t1-t0
 

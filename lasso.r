@@ -1,6 +1,6 @@
-dyn.load("lasso")
+dyn.load("tlpreg")
 
-lasso0 <- function(y, X, b.init=NULL, lambda=NULL, pen.fac=NULL, tol=1e-5, cd.maxit=1e+4) {
+lasso0 <- function(y, X, b.init=NULL, lambda=NULL, pen.fac=rep(1,p), tol=1e-4, cd.maxit=1e+4) {
 
     n <- as.integer(nrow(X))
     p <- as.integer(ncol(X))
@@ -14,16 +14,18 @@ lasso0 <- function(y, X, b.init=NULL, lambda=NULL, pen.fac=NULL, tol=1e-5, cd.ma
     } 
     nlambda <- as.integer(length(lambda))
 
-    #if(is.null(b.init)) {
+    if(is.null(b.init)) {
         r <- y
-        b0 <- 0
         b <- matrix(0, p, nlambda)
-    #} else {
-    #    r <- y - X %*% b.init
-    #}
-    pen_fac <- rep(TRUE, p)
+    } else {
+        r <- y - X %*% b.init
+        b <- matrix(b.init, p, nlambda)
+    }
+    b0 <- 0
+    
+    pen.fac <- as.integer(pen.fac)
 
-    .Call('lasso', y, X, b0, b, r, xtx, n, p, lambda, nlambda, pen_fac, tol, as.integer(cd.maxit))
+    .Call('lasso', y, X, b0, b, r, xtx, n, p, lambda, nlambda, pen.fac, tol, as.integer(cd.maxit))
 
-    list(b = b, lambda=lambda)
+    list(b = b, lambda = lambda)
 }
