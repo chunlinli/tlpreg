@@ -30,8 +30,9 @@ void lasso0(double *y, double *X, double *b0, double *b, double *r, double *xtx,
 
             for (int j = 0; j < *p; ++j)
             {
-                //b.next[j] <- sum(X[,j] * (y - b0 - X[,-j]%*%b.next[-j]))
-                b[idx + j] = b[idx + j] * xtx[j];
+                //b.next[j] <- sum(X[,j] * (y - b0 - X[,-j]%*%b.next[-j])) 
+                // optimize this block: reduce unnecessary read/write
+                b[idx + j] *= xtx[j];
                 for (int i = 0; i < *n; ++i)
                     b[idx + j] += X[j * (*n) + i] * (r[i] - *b0);
 

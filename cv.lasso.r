@@ -2,7 +2,7 @@ library(foreach)
 
 
 cv.lasso <- function(y, X, b.init = NULL, pen.fac = rep(1,p), lambda = NULL, 
-                     nfold=5, tol=1e-4, cd.maxit=1e+4) {  
+                     nfold=10, tol=1e-4, cd.maxit=1e+4) {  
 
     p <- ncol(X)
     n <- nrow(X)

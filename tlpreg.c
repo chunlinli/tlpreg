@@ -23,7 +23,7 @@ void tlpreg0(double *y, double *X, double *b0, double *b, double *r, double *xtx
     for (int k = 0; k < *ngamma; ++k)
         lambda[k] = gamma[k] * (*tau);
 
-    for (int k = 0; k < *ngamma; ++k)
+    for (int k = 0; k < *ngamma; ++k) // change loop ?
     {
         if (k > 0) 
         {

@@ -1,18 +1,19 @@
-## reference: Li, Shen, Pan "Simultaneous inference of directed relations with interventions"
-## author: Chunlin Li (li000007@umn.edu)
+
 
 dyn.load("tlpreg")
 
+# regularized version
 
-tlpreg0 <- function(y, X, b.init=rep(0,ncol(X)), tau=0.01, gamma=NULL, pen.fac=rep(1,ncol(X)), tol=1e-4, dc.maxit=20, cd.maxit=1e+4) {
+tlpreg0 <- function(y, X, b.init=NULL, tau=0.4*sqrt(log(p)/n), gamma=NULL, pen.fac=rep(1,ncol(X)), tol=1e-4, dc.maxit=15, cd.maxit=1e+4) {
 
     n <- as.integer(nrow(X))
     p <- as.integer(ncol(X))
     xtx <- colSums(X*X)
 
     # initialize gamma sequence 
+    r <- y - mean(y)
     if(is.null(gamma)) {
-        lambda.max <- max(abs(crossprod(X, y - mean(y))))/n
+        lambda.max <- max(abs(crossprod(X, r)))/n
         gamma <- exp(seq(from=log(lambda.max),
                           to=log(ifelse(p < n, 1e-4, .01)*lambda.max), 
                           length.out=100))/tau
@@ -21,10 +22,9 @@ tlpreg0 <- function(y, X, b.init=rep(0,ncol(X)), tau=0.01, gamma=NULL, pen.fac=r
 
     # initialize working residuals, b matrix, intercept
     if(is.null(b.init)) {
-        r <- y
         b <- matrix(0, p, ngamma)
     } else {
-        r <- y - X %*% b.init
+        r <- r - X %*% b.init
         b <- matrix(b.init, p, ngamma)
     }
     b0 <- 0
@@ -41,28 +41,60 @@ tlpreg0 <- function(y, X, b.init=rep(0,ncol(X)), tau=0.01, gamma=NULL, pen.fac=r
 
 
 
-# tlpreg0.old <- function(y, X, b.init=rep(0,ncol(X)), tau=0.01, gamma=0.5, pen.fac=rep(1,ncol(X)), tol=1e-5, dc.maxit=20, cd.maxit=1e+4) {
+# constrained version
 
-#     n <- nrow(X)
-#     p <- ncol(X)
-#     xtx <- colSums(X*X)
+tlpreg1 <- function(y, X, b.init=NULL, tau=0.4*sqrt(log(p)/n), K=NULL, pen.fac=rep(1,ncol(X)), tol=1e-4, dc.maxit=15, cd.maxit=1e+4) {
 
-#     .C('tlpreg0', y = as.double(y),
-#                    X = as.double(X),
-#                    b0 = as.double(numeric(1)),
-#                    b = as.double(b.init),
-#                    r = as.double(y),
-#                    xtx = as.double(xtx),
-#                    n = as.integer(n),
-#                    p = as.integer(p),
-#                    tau = as.double(tau),
-#                    gamma = as.double(gamma),
-#                    pen_fac = as.integer(pen.fac),
-#                    tol = as.double(tol),
-#                    dc_maxit = as.integer(dc.maxit),
-#                    cd_maxit = as.integer(cd.maxit))$b
-                   
-# }
+    n <- as.integer(nrow(X))
+    p <- as.integer(ncol(X))
+    xtx <- colSums(X*X)
+
+    # initialize K sequence
+    if(is.null(K))
+        K <- 1:min(p, as.integer(n/log(p)))
+
+    # initialize gamma sequence 
+    r <- y - mean(y)
+    lambda.max <- max(abs(crossprod(X, r)))/n
+    gamma <- exp(seq(from=log(lambda.max),
+                     to=log(ifelse(p < n, 1e-4, .01)*lambda.max), 
+                     length.out=100))/tau
+    ngamma <- as.integer(length(gamma))
+
+    # initialize working residuals, br matrix, intercept
+    if(is.null(b.init)) {
+        br <- matrix(0, p, ngamma)
+    } else {
+        r <- r - X %*% b.init
+        br <- matrix(b.init, p, ngamma)
+    }
+    b0 <- 0
+
+    pen.fac <- as.integer(pen.fac)
+
+    # call regularized version
+    .Call('tlpreg_r', y, X, b0, br, r, xtx, n, p, tau, gamma, ngamma, pen.fac, tol, as.integer(dc.maxit), as.integer(cd.maxit))
+
+    # replace with C/C++: qsort or C++ stdlib
+    k.br <- colSums(br!=0)
+    idx <- apply(abs(br), 2, function(a) order(a, decreasing=T))
+    b <- matrix(0, p, length(K))
+    for(t in 1:length(K)) {
+        loss <- rep(mean((y - mean(y))^2), ncol(br))
+        for(l in 1:ncol(br)) {
+            act.set <- idx[1:K[t],l]
+            Z <- cbind(rep(1,n),X[,act.set])
+            a <- solve(crossprod(Z), crossprod(Z, y))
+            loss[l] <- mean((y - Z %*% a)^2)
+        }
+        act.set <- idx[1:K[t],which.min(loss)]
+        Z <- cbind(rep(1,n),X[,act.set])
+        b[act.set,t] <- solve(crossprod(Z), crossprod(Z, y))[-1]
+    }
+
+    list(b = b, K = K, br=br)
+}
+
 
 
 
