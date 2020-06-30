@@ -15,7 +15,7 @@ cv.tlpreg0 <- function(y, X, b.init = NULL, pen.fac = rep(1,ncol(X)),
     if(is.null(gamma)) {
         lambda.max <- max(abs(crossprod(X, y - mean(y))))/n
         gamma <- exp(seq(from=log(lambda.max),
-                          to=log(ifelse(p < n, .001, .05)), 
+                          to=log(ifelse(p < n, .001, .08)), 
                           length.out=100))/tau
     } 
     
