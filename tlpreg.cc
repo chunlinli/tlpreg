@@ -56,7 +56,7 @@ void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xt
 
         std::copy(pen, pen + p_, pen0);
         
-        int nlambda = 1;
+        const int nlambda = 1;
         lasso0(X, b0, b + kp, r, xtx, n, p, &lambda[k], &nlambda, pen, tol, cd_maxit); 
         
         if (k != ngamma_ - 1) {
@@ -82,23 +82,24 @@ void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xt
                 pen[j] = (fabs(b[kp + j]) < tau_ ? pen_fac[j] : 0);
             
             // termination: active set
-            //if (std::equal(pen, pen + p_, pen0)) 
-            //    break;
+            if (std::equal(pen, pen + p_, pen0)) 
+                break;
 
-            std::copy(b + kp, b + kp + p_, b_curr);
+            //std::copy(b + kp, b + kp + p_, b_curr);
+            std::copy(pen, pen + p_, pen0);
 
             lasso0(X, b0, b + kp, r, xtx, n, p, &lambda[k], &nlambda, pen, tol, cd_maxit); 
 
             // termination: L1 norm difference
-            double diff_max = 0.0;
-            double b_change = 0.0;
-            for (int j = 0; j != p_; ++j) 
-            {
-                b_change = fabs(b[kp + j] - b_curr[j]);
-                diff_max = (b_change > diff_max ? b_change : diff_max);
-            }
-            if (diff_max <= tol_)
-                break;
+            //double diff_max = 0.0;
+            //double b_change = 0.0;
+            //for (int j = 0; j != p_; ++j) 
+            //{
+            //    b_change = fabs(b[kp + j] - b_curr[j]);
+            //    diff_max = (b_change > diff_max ? b_change : diff_max);
+            //}
+            //if (diff_max <= tol_)
+            //    break;
 
             // update current b
             

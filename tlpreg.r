@@ -4,7 +4,7 @@ dyn.load("./tlpreg")
 # regularized version
 
 tlpreg0 <- function(y, X, b.init=NULL, tau=0.5*sqrt(log(p)/n), gamma=NULL, pen.fac=rep(1,ncol(X)), 
-                    tol=1e-4, dc.maxit=as.integer(max(5,log2(n/log(p)))), cd.maxit=1e+4) {
+                    tol=1e-4, dc.maxit=as.integer(max(5,1+log2(n/log(p)))), cd.maxit=1e+4) {
 
     n <- as.integer(nrow(X))
     p <- as.integer(ncol(X))

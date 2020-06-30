@@ -5,7 +5,7 @@ source("tlpreg.r")
 source("cv.tlpreg.r")
 
 n <- 500
-p <- 3000
+p <- 10000
 X <- matrix(rnorm(n*p),n,p)
 Z <- rnorm(n)
 for(j in 1:p) {
@@ -51,22 +51,22 @@ which(as.numeric(mm3$b)!=0)
 ######################################################## DEV TEST
 
 # example: test tlpreg
-library(mvtnorm)
-source("lasso.r") 
-source("cv.lasso.r")
-source("tlpreg.r")
-source("cv.tlpreg.r")
+#library(mvtnorm)
+#source("lasso.r") 
+#source("cv.lasso.r")
+#source("tlpreg.r")
+#source("cv.tlpreg.r")
 
-n <- 400
-p <- 500
-S <- matrix(0.5,p,p) 
-diag(S) <- rep(1,p)
-X <- rmvnorm(n, sigma=S)
-y <- 1 + 0.5*(X[,1] + X[,2]) + rnorm(n)
-X <- apply(X, 2, function(z) (z - mean(z))/sd(z))
+#n <- 400
+#p <- 500
+#S <- matrix(0.5,p,p) 
+#diag(S) <- rep(1,p)
+#X <- rmvnorm(n, sigma=S)
+#y <- 1 + 0.5*(X[,1] + X[,2]) + rnorm(n)
+#X <- apply(X, 2, function(z) (z - mean(z))/sd(z))
 
 
-mm3 <- cv.tlpreg1(y=y, X=X)
-m3 <- tlpreg1(y=y,X=X,K=mm3$K.min)
-as.numeric(m3$b)
+#mm3 <- cv.tlpreg1(y=y, X=X)
+#m3 <- tlpreg1(y=y,X=X,K=mm3$K.min)
+#as.numeric(m3$b)
 

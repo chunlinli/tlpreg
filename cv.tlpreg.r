@@ -4,7 +4,7 @@ library(foreach)
 # regularized version 
 cv.tlpreg0 <- function(y, X, b.init = NULL, pen.fac = rep(1,ncol(X)), 
                       tau=0.5*sqrt(log(p)/n), gamma=NULL, nfold=10, 
-                      tol=1e-4, dc.maxit=as.integer(max(5,log2(n/log(p)))), cd.maxit=1e+4) {
+                      tol=1e-4, dc.maxit=as.integer(max(5,1+log2(n/log(p)))), cd.maxit=1e+4) {
     #cl <- makeCluster(5)
     #registerDoParallel(cl)
 

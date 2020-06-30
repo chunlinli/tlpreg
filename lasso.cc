@@ -78,7 +78,7 @@ void lasso0(const double *X, double *b0, double *b, double *r, const double *xtx
                 if (b_change != 0.0)
                 {
                     std::transform(r, r + n_, X + jn, r,
-                                   [b_change](double x1, double x2) { return x1 - x2 * b_change; });
+                                   [b_change](double x1, double x2) { return x1 - x2 * b_change; }); // replaced with fma
 
                     b[kp + j] = b_j;
                 }
