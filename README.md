@@ -36,7 +36,8 @@ m1 <- lasso0(X=X, y=y, lambda=m1.cv$lambda)
 ```
 
 # To-dos
-- Fast constrained regression
-- Active set update
+- Strong set update
 - Multiple regression
 - Logit regression
+- Precision matrix estimation
+- Inference
