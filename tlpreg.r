@@ -14,8 +14,7 @@ tlpreg0 <- function(y, X, b.init=NULL, tau=0.5*sqrt(log(p)/n), gamma=NULL, pen.f
     b0 <- mean(y)
     r <- y - b0
     if(is.null(gamma)) {
-        lambda.max <- max(abs(crossprod(X, r)))/n
-        gamma <- exp(seq(from=log(lambda.max),
+        gamma <- exp(seq(from=log(max(abs(crossprod(X, r)))/n),
                           to=log(ifelse(p < n, .001, .08)), 
                           length.out=100))/tau
     }

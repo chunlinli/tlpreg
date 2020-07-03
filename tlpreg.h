@@ -2,15 +2,21 @@
 #ifndef _TLPREG_H_
 #define _TLPREG_H_
 
-void lasso0(const double *X, double *b0, double *b, double *r, const double *xtx, const int *n, const int *p,
-            const double *lambda, const int *nlambda, const int *pen_fac, const double *tol, const int *cd_maxit);
+void lasso0(const double *__restrict X, double *__restrict b0, double *__restrict b, double *__restrict r, 
+            const double *__restrict xtx, const int *__restrict n, const int *__restrict p,
+            const double *__restrict lambda, const int *__restrict nlambda, const int *__restrict pen_fac, 
+            const double *__restrict tol, const int *__restrict cd_maxit);
 
-void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xtx, const int *n, const int *p, 
-             const double *tau, const double *gamma, const int* ngamma, const int *pen_fac, 
-             const double *tol, const int *dc_maxit, const int *cd_maxit);
+void tlpreg0(const double *__restrict X, double *__restrict b0, double *__restrict b, double *__restrict r, 
+             const double *__restrict xtx, const int *__restrict n, const int *__restrict p, 
+             const double *__restrict tau, const double *__restrict gamma, const int *__restrict ngamma, 
+             const int *__restrict pen_fac, const double *__restrict tol, const int *__restrict dc_maxit, const int *__restrict cd_maxit);
 
-//void tlpreg1(double *y, const double *X, double *b, double *r, double *xtx, int *n, int *p, 
-//             double *tau, double *gamma, int *ngamma, int *pen_fac, double *tol, int *dc_maxit, int *cd_maxit);
+void tlpreg1(const double *__restrict X, double *__restrict b0, double *__restrict b, double *__restrict r,
+             const double *__restrict xtx, const int *__restrict n, const int *__restrict p,
+             const double *__restrict tau, const int *__restrict K, const int *__restrict nK,
+             const double *__restrict gamma, const int *__restrict ngamma, const int *__restrict pen_fac,
+             const double *__restrict tol, const int *__restrict dc_maxit, const int *__restrict cd_maxit);
 
 #endif
 

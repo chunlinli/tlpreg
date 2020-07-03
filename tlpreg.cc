@@ -4,32 +4,35 @@
 
 // default regularized version: difference of convex functions algorithm + active set termination
 
-void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xtx, const int *n, const int *p, 
-             const double *tau, const double *gamma, const int *ngamma, const int *pen_fac, 
-             const double *tol, const int *dc_maxit, const int *cd_maxit)
+void tlpreg0(const double *__restrict X, double *__restrict b0, double *__restrict b, double *__restrict r, 
+             const double *__restrict xtx, const int *__restrict n, const int *__restrict p, 
+             const double *__restrict tau, const double *__restrict gamma, const int *__restrict ngamma, 
+             const int *__restrict pen_fac, const double *__restrict tol, const int *__restrict dc_maxit, const int *__restrict cd_maxit)
 {
     const int p_ = *p;
     const int n_ = *n;
     const int ngamma_ = *ngamma;
     const double tau_ = *tau;
-    const double tol_ = *tol;
+    //const double tol_ = *tol;
     const int dc_maxit_ = *dc_maxit;
+    const int nlambda = 1;
 
-    double b_curr[p_];
+    //double b_curr[p_];
+    double b0_warm_init;
     double b_warm_init[p_];
-    std::copy(b, b + p_, b_curr);
+    //std::copy(b, b + p_, b_curr);
     //for (int j = 0; j != p_; ++j)
     //    b_curr[j] = b[j];
     std::copy(b, b + p_, b_warm_init);
     //for (int j = 0; j < *p; ++j)
     //    b_warm_init[j] = b[j];
 
-    double r_warm_init[*n];
+    double r_warm_init[n_];
     std::copy(r, r + n_, r_warm_init);
     //for (int i = 0; i < *n; ++i)
     //    r_warm_init[i] = r[i];
     
-    double lambda[*ngamma];
+    double lambda[ngamma_];
     for (int k = 0; k != ngamma_; ++k)
         lambda[k] = gamma[k] * tau_;
 
@@ -42,6 +45,7 @@ void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xt
         
         if (k != 0) 
         {
+            *b0 = b0_warm_init;
             std::copy(b_warm_init, b_warm_init + p_, b + kp);
             //for (int j = 0; j < *p; ++j)
             //    b[k * (*p) + j] = b_warm_init[j];
@@ -56,10 +60,11 @@ void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xt
 
         std::copy(pen, pen + p_, pen0);
         
-        const int nlambda = 1;
         lasso0(X, b0, b + kp, r, xtx, n, p, &lambda[k], &nlambda, pen, tol, cd_maxit); 
         
         if (k != ngamma_ - 1) {
+            // store b0, b, r
+            b0_warm_init = *b0;
             std::copy(b + kp, b + kp + p_, b_warm_init);
             std::copy(r, r + n_, r_warm_init);
         }
@@ -75,8 +80,7 @@ void tlpreg0(const double *X, double *b0, double *b, double *r, const double *xt
         //for (int i = 0; i < *n; ++i)
         //    r_warm_init[i] = r[i];
 
-        int it = 1;
-        for (; it != dc_maxit_; ++it)
+        for (int it = 1; it != dc_maxit_; ++it)
         {
             for (int j = 0; j != p_; ++j)
                 pen[j] = (fabs(b[kp + j]) < tau_ ? pen_fac[j] : 0);

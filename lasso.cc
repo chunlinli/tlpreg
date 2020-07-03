@@ -9,8 +9,12 @@
 
 /// probably need to declare heap arrays for large-scale problems
 
-void lasso0(const double *X, double *b0, double *b, double *r, const double *xtx, const int *n, const int *p,
-            const double *lambda, const int *nlambda, const int *pen_fac, const double *tol, const int *cd_maxit)
+/// use __restrict 
+
+void lasso0(const double *__restrict X, double *__restrict b0, double *__restrict b, double *__restrict r, 
+            const double *__restrict xtx, const int *__restrict n, const int *__restrict p,
+            const double *__restrict lambda, const int *__restrict nlambda, const int *__restrict pen_fac, 
+            const double *__restrict tol, const int *__restrict cd_maxit)
 {
     // declare local variables
     const int p_ = *p;
@@ -30,6 +34,7 @@ void lasso0(const double *X, double *b0, double *b, double *r, const double *xtx
 
     double b_j;      // working coordinate value
     double b_j_curr; // past coordinate value
+    double b_change;
 
     for (int k = 0; k != nlambda_; ++k) // lambda iteration
     {
@@ -43,7 +48,6 @@ void lasso0(const double *X, double *b0, double *b, double *r, const double *xtx
             len_act_set = 0; // empty active set
 
             // update coordinate
-            double b_change = 0.0;
             for (int j = 0; j != p_; ++j)
             {
                 // update jth coordinate

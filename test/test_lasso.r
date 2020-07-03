@@ -6,7 +6,7 @@ source("cv.lasso.r")
 # SPEED TEST: CROSS-VALIDATION
 
 n <- 500
-p <- 1000
+p <- 10000
 sparse <- as.integer(0.005 * p)
 idx <- sample(1:p, sparse, replace = FALSE)
 X <- matrix(rnorm(n*p),n,p)
@@ -71,7 +71,7 @@ for(j in 1:p) {
 bt <- rnorm(length(idx))
 y <- X[,idx] %*% bt + rnorm(n)
 
-lambda = .07
+lambda = mm3$lambda.min
 
 t0 <- Sys.time()
 m1 <- glmnet(x=X, y=y, lambda=lambda, standardize=FALSE)

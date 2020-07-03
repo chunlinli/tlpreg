@@ -3,6 +3,8 @@
 library(ncvreg)
 source("tlpreg.r")
 source("cv.tlpreg.r")
+source("tlpreg1.r")
+source("cv.tlpreg1.r")
 
 n <- 500
 p <- 10000
@@ -31,42 +33,16 @@ m3 <- cv.tlpreg0(X=X, y=y, nfold=10)
 mm3 <- tlpreg0(X=X, y=y, gamma=m3$gamma.min)
 t1 <- Sys.time()
 t1-t0
+t0 <- Sys.time()
+m4 <- cv.tlpreg1(X=X, y=y, nfold=10)
+mm4 <- tlpreg1(X=X, y=y, K=m4$K.min)
+t1 <- Sys.time()
+t1-t0
 
 # ACCURACY TEST
 which(mm1$beta[-1]!=0)
 which(mm2$beta[-1]!=0)
 which(as.numeric(mm3$b)!=0)
+which(as.numeric(mm4$b)!=0)
 
 # Note: informative variables are X1, X2, X10, X50
-
-
-
-
-
-
-
-
-
-
-######################################################## DEV TEST
-
-# example: test tlpreg
-#library(mvtnorm)
-#source("lasso.r") 
-#source("cv.lasso.r")
-#source("tlpreg.r")
-#source("cv.tlpreg.r")
-
-#n <- 400
-#p <- 500
-#S <- matrix(0.5,p,p) 
-#diag(S) <- rep(1,p)
-#X <- rmvnorm(n, sigma=S)
-#y <- 1 + 0.5*(X[,1] + X[,2]) + rnorm(n)
-#X <- apply(X, 2, function(z) (z - mean(z))/sd(z))
-
-
-#mm3 <- cv.tlpreg1(y=y, X=X)
-#m3 <- tlpreg1(y=y,X=X,K=mm3$K.min)
-#as.numeric(m3$b)
-
