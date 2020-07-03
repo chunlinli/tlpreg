@@ -6,7 +6,7 @@ Functions for regressions with truncated lasso penalty
 Compilation:
 ```sh
 # In terminal, type 
-R CMD SHLIB lasso.cc rlasso.cc rtlpreg.cc tlpreg.cc -o tlpreg
+R CMD SHLIB lasso.cc rlasso.cc rtlpreg.cc tlpreg.cc rtlpreg1.cc tlpreg1.cc -o tlpreg
 ```
 
 Example: 
