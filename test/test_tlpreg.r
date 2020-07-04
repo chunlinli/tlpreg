@@ -11,10 +11,10 @@ p <- 10000
 X <- matrix(rnorm(n*p),n,p)
 Z <- rnorm(n)
 for(j in 1:p) {
-  X[,j] <- Z + rnorm(n)
+  X[,j] <- X[,j] + Z
   X[,j] <- (X[,j]-mean(X[,j]))/sd(X[,j])
 }
-y <- 1 + 0.5*(X[,1] + X[,2] + X[,10] + X[,50]) + rnorm(n) 
+y <- 1 + 0.5*(X[,1] - X[,2] + X[,10] - X[,50] + X[,200]) + rnorm(n) 
 
 
 # SPEED TEST
@@ -45,4 +45,4 @@ which(mm2$beta[-1]!=0)
 which(as.numeric(mm3$b)!=0)
 which(as.numeric(mm4$b)!=0)
 
-# Note: informative variables are X1, X2, X10, X50
+# Note: informative variables are X1, X2, X10, X50, X200
