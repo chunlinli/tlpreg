@@ -31,7 +31,7 @@ m0 <- tlpreg0(X=X, y=y, gamma=m0.cv$gamma.min)
 source("tlpreg1.r")
 source("cv.tlpreg1.r")
 m1.cv <- cv.tlpreg1(X=X, y=y) # Run 10-fold CV by default
-m1 <- tlpreg1(X=X, y=y, gamma=m1.cv$K.min)
+m1 <- tlpreg1(X=X, y=y, K=m1.cv$K.min)
 
 # Estimation by LASSO
 source("lasso.r")
