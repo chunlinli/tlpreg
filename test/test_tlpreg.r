@@ -1,13 +1,14 @@
-
 # README: Compare TLP with SCAD and MCP (ncvreg)
+library(tictoc)
 library(ncvreg)
 source("tlpreg.r")
 source("cv.tlpreg.r")
 source("tlpreg1.r")
 source("cv.tlpreg1.r")
 
+set.seed(2020)
 n <- 500
-p <- 10000
+p <- 50000
 X <- matrix(rnorm(n*p),n,p)
 Z <- rnorm(n)
 for(j in 1:p) {
@@ -16,28 +17,26 @@ for(j in 1:p) {
 }
 y <- 1 + 0.5*(X[,1] - X[,2] + X[,10] - X[,50] + X[,200]) + rnorm(n) 
 
-
 # SPEED TEST
-t0 <- Sys.time()
+tic("SCAD")
 m1 <- cv.ncvreg(X=X, y=y, penalty="SCAD")
 mm1 <- ncvreg(X=X, y=y, lambda=m1$lambda.min, penalty="SCAD")
-t1 <- Sys.time()
-t1-t0
-t0 <- Sys.time()
+toc()
+
+tic("MCP")
 m2 <- cv.ncvreg(X=X, y=y, penalty="MCP")
 mm2 <- ncvreg(X=X, y=y, lambda=m2$lambda.min, penalty="MCP")
-t1 <- Sys.time()
-t1-t0
-t0 <- Sys.time()
+toc()
+
+tic("TLP-Regularized")
 m3 <- cv.tlpreg0(X=X, y=y, nfold=10)
 mm3 <- tlpreg0(X=X, y=y, gamma=m3$gamma.min)
-t1 <- Sys.time()
-t1-t0
-t0 <- Sys.time()
+toc()
+
+tic("TLP-Constrained")
 m4 <- cv.tlpreg1(X=X, y=y, nfold=10)
 mm4 <- tlpreg1(X=X, y=y, K=m4$K.min)
-t1 <- Sys.time()
-t1-t0
+toc()
 
 # ACCURACY TEST
 which(mm1$beta[-1]!=0)
