@@ -41,8 +41,8 @@ m2 <- lasso0(X=X, y=y, lambda=m2.cv$lambda)
 ```
 
 # To-dos
-- Strong set update
-- Multiple regression
-- Logit regression
-- Precision matrix estimation
 - Inference
+- Strong set update
+- Accelerate multiple regression
+- Logistic/Poisson regression
+- Precision matrix estimation
