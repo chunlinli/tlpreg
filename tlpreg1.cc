@@ -53,7 +53,8 @@ void tlpreg1(const double *__restrict X, double *__restrict b0, double *__restri
     std::fill(rss, rss + nK_, INFINITY);
 
     double b0_proj_init = *b0;
-    double b_proj_init[p_] = {};
+    double b_proj_init[p_];
+    std::fill(b_proj_init, b_proj_init + p_, 0.0);
     double b0_proj;
     double b_proj[p_];
 
