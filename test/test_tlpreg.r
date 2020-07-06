@@ -13,7 +13,7 @@ X <- matrix(rnorm(n*p),n,p)
 Z <- rnorm(n)
 for(j in 1:p) {
   X[,j] <- X[,j] + Z
-  X[,j] <- (X[,j]-mean(X[,j]))/sd(X[,j])
+  X[,j] <- (X[,j] - mean(X[,j])) / sd(X[,j])
 }
 y <- 1 + 0.5*(X[,1] - X[,2] + X[,10] - X[,50] + X[,200]) + rnorm(n) 
 
@@ -33,7 +33,7 @@ m3 <- cv.tlpreg0(X=X, y=y, nfold=10)
 mm3 <- tlpreg0(X=X, y=y, gamma=m3$gamma.min)
 toc()
 
-tic("TLP-Constrained")
+tic("L0-Constrained")
 m4 <- cv.tlpreg1(X=X, y=y, nfold=10)
 mm4 <- tlpreg1(X=X, y=y, K=m4$K.min)
 toc()
