@@ -1,5 +1,15 @@
 # `tlpreg`
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
 Functions for regressions with truncated lasso penalty (TLP, also known as capped $\ell_1$). 
 The implementation is partially based on Li et al. (2020+).
 
